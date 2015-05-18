@@ -51,8 +51,10 @@ public class FileUploadClient {
 	public void upload() {
 		// list中保存的是client要进行post上传的文件名,如：d:\haha.doc..
 		List<String> list = new ArrayList<String>();
+		String uploadFilename = BusiPropsUtil.getProps("xjfile.name");
 		// list.add("c:\\test.zip");
-		list.add(BusiPropsUtil.getProps("xjfile.name"));
+		logger.info("Upload file:" + uploadFilename);
+		list.add(uploadFilename);
 
 		try {
 			// 定义数据分隔线
@@ -125,5 +127,4 @@ public class FileUploadClient {
 			e.printStackTrace();
 		}
 	}
-
 }

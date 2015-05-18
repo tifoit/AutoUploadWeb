@@ -33,7 +33,7 @@ import org.apache.log4j.Logger;
 public class UploadServlet extends HttpServlet {
 
 	private static Logger logger = Logger.getLogger(UploadServlet.class);
-	
+
 	private static final long serialVersionUID = 1L;
 	private String filePath; // 文件存放目录
 	private String tempPath; // 临时文件目录
@@ -41,7 +41,7 @@ public class UploadServlet extends HttpServlet {
 	// 初始化
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		
+
 		// 从配置文件中获得初始化参数
 		filePath = config.getInitParameter("filepath");
 		tempPath = config.getInitParameter("temppath");
@@ -50,12 +50,25 @@ public class UploadServlet extends HttpServlet {
 
 		filePath = context.getRealPath(filePath);
 		tempPath = context.getRealPath(tempPath);
-		
+
+		createFolder(filePath);
+		createFolder(tempPath);
+
 		logger.info("临时文件目录:" + tempPath);
 		logger.info("文件存放目录:" + filePath);
-		
+
 		logger.info("文件存放目录、临时文件目录准备完毕 ...");
 
+	}
+
+	private void createFolder(String filePath) {
+		File f = new File(filePath);
+
+		// 创建文件夹
+		if (!f.exists()) {
+			f.mkdirs();
+		}
+		f = null;
 	}
 
 	// doPost
@@ -82,13 +95,13 @@ public class UploadServlet extends HttpServlet {
 					logger.info("处理表单内容 ...");
 					processFormField(item, pw);
 				} else {
-					logger.info("处理上传的文件 ...");
+					logger.info("===>>>文件上传开始 ...");
 					processUploadFile(item, pw);
 				}
 			}// end while()
 
 			pw.close();
-			logger.info("文件上传完毕.\n");
+			logger.info("===>>>文件上传完毕.\n");
 
 		} catch (Exception e) {
 			System.out.println("使用 fileupload 包时发生异常 ...");
@@ -106,14 +119,14 @@ public class UploadServlet extends HttpServlet {
 		pw.println(name + " : " + value + "\r\n");
 	}
 
-	// 处理上传的文件
+	// 处理上传的文件/文件上传开始
 	private void processUploadFile(FileItem item, PrintWriter pw)
 			throws Exception {
-		
+
 		// 此时的文件名包含了完整的路径，得注意加工一下
 		String filename = item.getName();
 		logger.info("完整的文件名：" + filename);
-		
+
 		int index = filename.lastIndexOf("\\");
 		filename = filename.substring(index + 1, filename.length());
 
@@ -128,6 +141,9 @@ public class UploadServlet extends HttpServlet {
 		item.write(uploadFile);
 		pw.println(filename + " 文件保存完毕 ...");
 		pw.println("文件大小为 ：" + fileSize + "\r\n");
+
+		logger.info(filename + " 文件保存完毕 ...");
+		logger.info("文件大小为 ：" + fileSize);
 	}
 
 	// doGet
