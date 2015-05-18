@@ -1,3 +1,5 @@
+package com.stlz.quartz.server;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,19 +19,16 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 /**
  * @Title: UploadServlet.java
- * @Package: 
+ * @Package: com.stlz.quartz.server
  * @Desc: 该程序为Server端代码，
- *        用来进行接收、处理Client端程序发送过来的文件上传POST请求,并将上传的文件保存到filePath路径下; 
- *        该工程中有两个客户端上传的方法/程序:
- *           方法1：使用自动的客户端程序FileUploadClient.java;
- *           方法2：使用upload.html程序，人工选择待上传的文件;
+ *        用来进行接收、处理Client端程序发送过来的文件上传POST请求,并将上传的文件保存到filePath路径下;
  * @Copyright:
  * @author: liuzhuang
  * @date: 2015/05/15
  * @Email: liuzhuang@umpay.com
  */
 
-// Servlet 文件上传  
+// Servlet 文件上传
 public class UploadServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -80,13 +79,13 @@ public class UploadServlet extends HttpServlet {
 			}// end while()
 
 			pw.close();
-			System.out.println("文件上传完毕.");
-			
+			System.out.println("文件上传完毕.\n");
+
 		} catch (Exception e) {
 			System.out.println("使用 fileupload 包时发生异常 ...");
 			e.printStackTrace();
 		}// end try ... catch ...
-		
+
 	}// end doPost()
 
 	// 处理表单内容

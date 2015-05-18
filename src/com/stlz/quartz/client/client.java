@@ -1,3 +1,5 @@
+package com.stlz.quartz.client;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -7,8 +9,8 @@ import java.net.URLEncoder;
 
 /**
  * @Title: client.java
- * @Package: 
- * @Desc: 使用HttpURLConnection发起POST请求(暂时不能用于传输文件类型) 
+ * @Package:
+ * @Desc: 使用HttpURLConnection发起POST请求(暂时不能用于传输文件类型)
  * @Copyright: 此文件目前还问题，需再修正
  * @author: liuzhuang
  * @date: 2015/05/15
@@ -38,8 +40,9 @@ public class client {
 			byte[] requestStringBytes = requestString.getBytes(ENCODING_UTF_8);
 			httpConn.setRequestProperty("Content-length", ""
 					+ requestStringBytes.length);
-			httpConn.setRequestProperty("Content-Type","application/octet-stream");
-//			httpConn.setRequestProperty("Content-Type","MULTIPART/FORM-DATA");
+			httpConn.setRequestProperty("Content-Type",
+					"application/octet-stream");
+			// httpConn.setRequestProperty("Content-Type","MULTIPART/FORM-DATA");
 			httpConn.setRequestProperty("Connection", "Keep-Alive");// 维持长连接
 			httpConn.setRequestProperty("Charset", "UTF-8");
 			//
@@ -65,13 +68,14 @@ public class client {
 					sb.append(readLine).append("\n");
 				}
 				responseReader.close();
-				System.out.println("==========>\n"+sb.toString());
+				System.out.println("==========>\n" + sb.toString());
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 
 	}
+
 	public static void main(String[] args) {
 		new client().httpUrlConnection();
 	}

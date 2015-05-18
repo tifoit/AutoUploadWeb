@@ -5,14 +5,16 @@
 
 	<servlet>
 		<servlet-name>UploadServlet</servlet-name>
-		<servlet-class>UploadServlet</servlet-class>
+		<servlet-class>com.stlz.quartz.server.UploadServlet</servlet-class>
 
 		<init-param>
 			<param-name>filepath</param-name>
+			<!-- 需要在webserver部署工程路径下新建uploadFile文件夹 -->
 			<param-value>uploadFile</param-value>
 		</init-param>
 		<init-param>
 			<param-name>temppath</param-name>
+		    <!-- 需要在webserver部署工程路径下新建temp文件夹 -->
 			<param-value>temp</param-value>
 		</init-param>
 	</servlet>
