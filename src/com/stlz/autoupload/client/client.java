@@ -1,4 +1,4 @@
-package com.stlz.quartz.client;
+package com.stlz.autoupload.client;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

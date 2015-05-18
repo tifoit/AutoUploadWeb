@@ -1,4 +1,4 @@
-package com.stlz.quartz.client;
+package com.stlz.autoupload.client;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -12,9 +12,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
+import com.stlz.util.config.BusiPropsUtil;
+
 /**
  * @Title: FileUploadClient.java
- * @Package: com.stlz.quartz.client
+ * @Package: com.stlz.autoupload.client
  * @Desc: 该程序为Client端代码，
  *        使用HttpURLConnection来自动发起POST请求,将上传文件(文件名保存在list变量中)的Post请求发送到Server端;
  * @Copyright:
@@ -24,17 +28,21 @@ import java.util.List;
  */
 
 public class FileUploadClient {
+
+	private static Logger logger = Logger.getLogger(FileUploadClient.class);
+
 	public static void main(String[] args) {
 		try {
 
 			FileUploadClient fupc = new FileUploadClient();
 			fupc.upload();
-			System.out.println("=============Client端上传文件发送完毕！=============");
-			//必须退出、关闭该连接
+			logger.debug("=============Client端上传文件发送完毕！=============");
+			// 必须退出、关闭该连接
 			System.exit(0);
 
 		} catch (Exception e) {
-			System.out.println("=============Client端发送文件出现异常！=============" + e);
+			logger.debug("=============Client端发送文件出现异常！=============" + e);
+			logger.error("Client端发送文件出现异常！ ...", e);
 			e.printStackTrace();
 		}
 
@@ -43,12 +51,18 @@ public class FileUploadClient {
 	public void upload() {
 		// list中保存的是client要进行post上传的文件名,如：d:\haha.doc..
 		List<String> list = new ArrayList<String>();
-		list.add("c:\\test.zip");
+		// list.add("c:\\test.zip");
+		list.add(BusiPropsUtil.getProps("xjfile.name"));
+
 		try {
 			// 定义数据分隔线
 			String BOUNDARY = "---------7d4a6d158c9";
+
 			// 接收post上传的server端处理URL
-			URL url = new URL("http://localhost:8086/autoload/upload");
+			String postUrl = BusiPropsUtil.getProps("Server.url");
+			URL url = new URL(postUrl);
+			logger.info("Server Url:" + url);
+
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			// 发送POST请求必须设置如下两行
 			conn.setDoOutput(true);
@@ -98,15 +112,16 @@ public class FileUploadClient {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					conn.getInputStream()));
 			// 打印输出Server端响应
-			System.out.println("Server端响应信息：");
+			logger.info("Server端响应信息：");
 			String line = null;
 			while ((line = reader.readLine()) != null) {
 				System.out.println(line);
 			}
-			System.out.println("Server端响应结束!");
+			logger.info("Server端响应结束!");
 
 		} catch (Exception e) {
 			System.out.println("发送POST请求出现异常！" + e);
+			logger.error("发送POST请求出现异常！ ...", e);
 			e.printStackTrace();
 		}
 	}

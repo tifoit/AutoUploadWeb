@@ -5,7 +5,7 @@
 
 	<servlet>
 		<servlet-name>UploadServlet</servlet-name>
-		<servlet-class>com.stlz.quartz.server.UploadServlet</servlet-class>
+		<servlet-class>com.stlz.autoupload.server.UploadServlet</servlet-class>
 
 		<init-param>
 			<param-name>filepath</param-name>

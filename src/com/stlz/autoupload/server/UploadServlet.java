@@ -1,4 +1,4 @@
-package com.stlz.quartz.server;
+package com.stlz.autoupload.server;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.log4j.Logger;
 
 /**
  * @Title: UploadServlet.java
@@ -31,6 +32,8 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 // Servlet 文件上传
 public class UploadServlet extends HttpServlet {
 
+	private static Logger logger = Logger.getLogger(UploadServlet.class);
+	
 	private static final long serialVersionUID = 1L;
 	private String filePath; // 文件存放目录
 	private String tempPath; // 临时文件目录
@@ -38,6 +41,7 @@ public class UploadServlet extends HttpServlet {
 	// 初始化
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
+		
 		// 从配置文件中获得初始化参数
 		filePath = config.getInitParameter("filepath");
 		tempPath = config.getInitParameter("temppath");
@@ -46,7 +50,12 @@ public class UploadServlet extends HttpServlet {
 
 		filePath = context.getRealPath(filePath);
 		tempPath = context.getRealPath(tempPath);
-		System.out.println("文件存放目录、临时文件目录准备完毕 ...");
+		
+		logger.info("临时文件目录:" + tempPath);
+		logger.info("文件存放目录:" + filePath);
+		
+		logger.info("文件存放目录、临时文件目录准备完毕 ...");
+
 	}
 
 	// doPost
@@ -70,19 +79,20 @@ public class UploadServlet extends HttpServlet {
 			while (iter.hasNext()) {
 				FileItem item = (FileItem) iter.next();
 				if (item.isFormField()) {
-					System.out.println("处理表单内容 ...");
+					logger.info("处理表单内容 ...");
 					processFormField(item, pw);
 				} else {
-					System.out.println("处理上传的文件 ...");
+					logger.info("处理上传的文件 ...");
 					processUploadFile(item, pw);
 				}
 			}// end while()
 
 			pw.close();
-			System.out.println("文件上传完毕.\n");
+			logger.info("文件上传完毕.\n");
 
 		} catch (Exception e) {
 			System.out.println("使用 fileupload 包时发生异常 ...");
+			logger.error("使用 fileupload 包时发生异常 ...", e);
 			e.printStackTrace();
 		}// end try ... catch ...
 
@@ -99,16 +109,18 @@ public class UploadServlet extends HttpServlet {
 	// 处理上传的文件
 	private void processUploadFile(FileItem item, PrintWriter pw)
 			throws Exception {
+		
 		// 此时的文件名包含了完整的路径，得注意加工一下
 		String filename = item.getName();
-		System.out.println("完整的文件名：" + filename);
+		logger.info("完整的文件名：" + filename);
+		
 		int index = filename.lastIndexOf("\\");
 		filename = filename.substring(index + 1, filename.length());
 
 		long fileSize = item.getSize();
 
 		if ("".equals(filename) && fileSize == 0) {
-			System.out.println("文件名为空 ...");
+			logger.info("文件名为空 ...");
 			return;
 		}
 
